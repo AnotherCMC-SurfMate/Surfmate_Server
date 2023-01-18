@@ -4,6 +4,9 @@ spring:
       max-request-size: 10MB
       max-file-size: 10MB
   datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
     url: jdbc:mysql://localhost:3306/surfmate_db?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: 1234
@@ -29,7 +32,9 @@ springdoc:
     path: /swagger-ui.html
 
 
-
+auth:
+  secret: Y21jMTF0aGFub3RoZXJjbWNzdXJmbWF0ZWNtYzExdGhhbm90aGVyY21jc3VyZm1hdGU=
+  tokenValidation: 1000
 
 
 

@@ -3,7 +3,6 @@ package cmc.surfmate.common.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.io.Serializable;
 
 /**
  * CommonResponse.java

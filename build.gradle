@@ -95,7 +95,7 @@ sourceSets {
 }
 
 configurations {
-	querydsl.extendsFrom compileClasspath
+	querydsl.extendsFrom compileClasspath,implementation, compileOnly, runtimeOnly, annotationProcessor
 }
 
 compileQuerydsl {
