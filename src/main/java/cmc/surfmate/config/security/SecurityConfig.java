@@ -45,8 +45,9 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers("/auth/**","/","/health").permitAll()
                                 .anyRequest()
-                                .permitAll()
+                                .authenticated()
 
                         )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
