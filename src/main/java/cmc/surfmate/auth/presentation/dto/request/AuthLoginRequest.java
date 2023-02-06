@@ -9,7 +9,7 @@ import lombok.*;
  * @author jemlog
  */
 @Data
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthLoginRequest {
 
     @Schema(example = "01027579923")

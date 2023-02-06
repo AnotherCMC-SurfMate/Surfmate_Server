@@ -1,7 +1,9 @@
 package cmc.surfmate.auth.presentation.dto.request;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * OAuthSignupRequest.java
@@ -10,7 +12,7 @@ import lombok.Data;
  */
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuthSignupRequest {
     private String phNum;
     private String nickname;

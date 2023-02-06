@@ -74,7 +74,11 @@ public class AuthService {
 
     public void checkDuplicatedNickname(String nickname)
     {
-        userRepository.findUserByNickname(nickname).orElseThrow(() -> new IllegalArgumentException());
+        Optional<User> userByNickname = userRepository.findUserByNickname(nickname);
+        if(userByNickname.isPresent())
+        {
+            throw new IllegalArgumentException("중복된 닉네임입니다");
+        }
     }
 
 //    public void logout(String uid, String accessToken)

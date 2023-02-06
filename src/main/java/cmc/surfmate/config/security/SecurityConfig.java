@@ -27,7 +27,6 @@ public class SecurityConfig {
 
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final RestAccessDeniedHandler accessDeniedHandler;
-
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
