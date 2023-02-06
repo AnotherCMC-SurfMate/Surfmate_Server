@@ -33,7 +33,7 @@ springdoc:
 
 
 auth:
-  secret: Y21jMTF0aGFub3RoZXJjbWNzdXJmbWF0ZWNtYzExdGhhbm90aGVyY21jc3VyZm1hdGU=
+  secret: Y21jMTF0aGFub3RoZXJjbWNzdXJmbWF0ZWNtYzExdGhhbm90aGVyY21jc3VyZm1hdGUfwegwegewfwwgwegwggsfgergtrr
   tokenValidation: 1000
 
 

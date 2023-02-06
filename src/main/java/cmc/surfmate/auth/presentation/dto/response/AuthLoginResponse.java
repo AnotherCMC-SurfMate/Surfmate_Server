@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.presentation.dto;
+package cmc.surfmate.auth.presentation.dto.response;
 
 import lombok.Builder;
 

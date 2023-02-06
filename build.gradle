@@ -14,13 +14,14 @@ configurations {
 	}
 }
 
+
 repositories {
 	mavenCentral()
 }
 
-ext {
-	set('springCloudVersion', "2022.0.0")
-}
+//ext {
+//	set('springCloudVersion', "2022.0.0")
+//}
 
 dependencies {
 
@@ -37,6 +38,11 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // FCM
+	implementation 'com.google.firebase:firebase-admin:7.1.1'
+
 	// QueryDSL
 	// springboot 3.0 javax -> jakarta 변경 사항
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -47,12 +53,10 @@ dependencies {
 	// MVC
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'
+//	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'
 
 	// Swagger UI
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.9'
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-data-rest', version: '1.6.9'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -65,11 +69,11 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
+//dependencyManagement {
+//	imports {
+//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+//	}
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()

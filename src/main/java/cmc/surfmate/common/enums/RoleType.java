@@ -5,7 +5,7 @@ package cmc.surfmate.common.enums;
  *
  * @author jemlog
  */
-public enum Role {
+public enum RoleType {
     USER,
     ADMIN
 }

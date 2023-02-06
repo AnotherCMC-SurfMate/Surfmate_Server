@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.application.key;
+package cmc.surfmate.common.util.key;
 
 import java.util.List;
 

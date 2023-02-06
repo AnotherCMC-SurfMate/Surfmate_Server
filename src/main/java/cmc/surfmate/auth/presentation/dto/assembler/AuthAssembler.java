@@ -1,5 +1,7 @@
-package cmc.surfmate.auth.presentation.dto;
+package cmc.surfmate.auth.presentation.dto.assembler;
 
+import cmc.surfmate.auth.presentation.dto.request.AuthSignupRequest;
+import cmc.surfmate.auth.presentation.dto.response.*;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import cmc.surfmate.common.response.CommonResponse;

@@ -1,6 +1,5 @@
-package cmc.surfmate.auth.presentation.dto;
+package cmc.surfmate.auth.presentation.dto.response;
 
-import cmc.surfmate.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

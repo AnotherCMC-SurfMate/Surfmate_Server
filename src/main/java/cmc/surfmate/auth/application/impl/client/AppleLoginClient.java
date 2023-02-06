@@ -1,7 +1,7 @@
-package cmc.surfmate.auth.application.impl;
+package cmc.surfmate.auth.application.impl.client;
 
 import cmc.surfmate.auth.application.LoginClient;
-import cmc.surfmate.auth.application.impl.dto.AppleUserResponse;
+import cmc.surfmate.auth.application.impl.dto.response.AppleUserResponse;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import cmc.surfmate.user.domain.User;

@@ -10,5 +10,5 @@ public enum Provider {
     KAKAO,
     NAVER,
     APPLE,
-    DEFAULT
+    NORMAL  // 일반 로그인
 }

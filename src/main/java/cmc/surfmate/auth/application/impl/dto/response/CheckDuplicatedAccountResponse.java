@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.application.impl.dto;
+package cmc.surfmate.auth.application.impl.dto.response;
 
 import cmc.surfmate.common.enums.Provider;
 import lombok.AllArgsConstructor;

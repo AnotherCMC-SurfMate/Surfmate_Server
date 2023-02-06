@@ -17,7 +17,7 @@ import reactor.netty.tcp.TcpClient;
 import java.util.concurrent.TimeUnit;
 
 /**
- * WebConfig.java
+ * WebClientConfig.java
  *
  * @author jemlog
  */

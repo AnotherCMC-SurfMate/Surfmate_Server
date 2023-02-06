@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.application.impl.dto;
+package cmc.surfmate.auth.application.impl.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

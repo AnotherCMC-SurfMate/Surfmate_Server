@@ -1,5 +1,6 @@
 package cmc.surfmate.auth.filter;
 
+import cmc.surfmate.common.enums.RoleType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -34,22 +35,14 @@ public class TokenProvider {
 
 
     public TokenProvider(@Value("${auth.secret}") String secret, @Value("${auth.tokenValidation}") long tokenValidityInSeconds) {
-
-        this.secret = secret; // JWT 인증 시 필요한 비밀값
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000; // TODO: 유효기간 생각해보기
-
-        //시크릿 값을 decode해서 키 변수에 할당
+        this.secret = secret;
+        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 토큰 생성
-    public String createToken(Authentication authentication) {
-
-        // 유저가 가지고 있는 권한들 다 가지고 오는 함수 USER,ADMIN 이런 식의 문자열로 구성
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public String createToken(String uid, RoleType role) {
 
         // 현재시간
         long now = (new Date()).getTime();
@@ -58,14 +51,15 @@ public class TokenProvider {
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
+                .setSubject(uid)
+                .claim(AUTHORITIES_KEY, role.toString())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+
     }
 
-    // 토큰을 받아 클레임을 만들고 권한정보를 빼서 시큐리티 유저객체를 만들어 Authentication 객체 반환
+
     public Authentication getAuthentication(String token) {
 
         Claims claims = Jwts
@@ -80,7 +74,6 @@ public class TokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        // 디비를 거치지 않고 토큰에서 값을 꺼내 바로 시큐리티 유저 객체를 만들어 Authentication을 만들어 반환하기에 유저네임, 권한 외 정보는 알 수 없다.
         User principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);

@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.presentation.dto;
+package cmc.surfmate.auth.presentation.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CheckDuplicatedAccountRequest {
-
   private String phNum;
 }

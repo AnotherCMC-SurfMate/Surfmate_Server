@@ -1,8 +1,8 @@
-package cmc.surfmate.auth.application.impl;
+package cmc.surfmate.auth.application.impl.client;
 
 import cmc.surfmate.auth.application.LoginClient;
 
-import cmc.surfmate.auth.application.impl.dto.NaverUserResponse;
+import cmc.surfmate.auth.application.impl.dto.response.NaverUserResponse;
 
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;

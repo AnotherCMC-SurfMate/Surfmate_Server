@@ -1,6 +1,11 @@
-package cmc.surfmate.common.enums;/**
+package cmc.surfmate.common.enums;
+
+/**
  * Gender.java
+ *
  * @author jemlog
- */   
-    public enum Gender {
+ */
+public enum Gender {
+    MALE,
+    FEMALE
 }

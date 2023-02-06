@@ -1,7 +1,7 @@
 package cmc.surfmate.config.security;
 
-import cmc.surfmate.auth.exception.RestAccessDeniedHandler;
-import cmc.surfmate.auth.exception.RestAuthenticationEntryPoint;
+import cmc.surfmate.auth.handler.RestAccessDeniedHandler;
+import cmc.surfmate.auth.handler.RestAuthenticationEntryPoint;
 import cmc.surfmate.auth.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -46,10 +46,9 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/health","/")
+                                .anyRequest()
                                 .permitAll()
-                        .anyRequest()
-                        .authenticated()
+
                         )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
