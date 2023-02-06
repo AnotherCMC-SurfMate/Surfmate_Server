@@ -46,11 +46,9 @@ dependencies {
 	// QueryDSL
 	// springboot 3.0 javax -> jakarta 변경 사항
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-<<<<<<< HEAD
-	implementation "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-=======
+
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
->>>>>>> login
+
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
@@ -81,10 +79,6 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-<<<<<<< HEAD
+
 }
 
-
-=======
-}
->>>>>>> login
