@@ -32,7 +32,7 @@ public class HealthController {
         HashMap<String,String> map = new HashMap<>();
         HashMap<String,String> map2 = new HashMap<>();
         map2.put("first","머식");
-        map.put("second","제민");
+        map.put("second","제민32131");
         List<HashMap<String, String>> result = List.of(map, map2);
 
         return ResponseEntity.ok(new CommonResponse(200,"성공",result));
