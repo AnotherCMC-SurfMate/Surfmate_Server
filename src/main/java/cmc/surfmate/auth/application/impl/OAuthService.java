@@ -39,7 +39,7 @@ public class OAuthService {
         유저가 존재하면 인증 성공
         유저가 존재하지 않으면 회원가입으로 넘어감
          */
-        Optional<User> findUser = userRepository.findById(socialUser.getId());
+        Optional<User> findUser = userRepository.findUserByUid(socialUser.getUid());
 
         // 기존 유저가 존재하면 로그인 성공
         if(findUser.isPresent())

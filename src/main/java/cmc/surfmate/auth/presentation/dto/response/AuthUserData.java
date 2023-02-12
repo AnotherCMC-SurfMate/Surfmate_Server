@@ -14,6 +14,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class AuthUserData {
+    private Long userId;
     private String uid;
     private Provider provider;
     private String phNum;
