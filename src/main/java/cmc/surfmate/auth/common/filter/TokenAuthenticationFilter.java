@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.filter;
+package cmc.surfmate.auth.common.filter;
 
 import cmc.surfmate.common.util.HeaderUtil;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * TokenAuthenticationFilter.java

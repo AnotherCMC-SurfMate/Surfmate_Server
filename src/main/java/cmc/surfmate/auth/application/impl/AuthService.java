@@ -1,13 +1,14 @@
 package cmc.surfmate.auth.application.impl;
 
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
-import cmc.surfmate.auth.filter.TokenProvider;
+import cmc.surfmate.auth.common.filter.TokenProvider;
 import cmc.surfmate.auth.presentation.dto.assembler.AuthAssembler;
 import cmc.surfmate.auth.presentation.dto.request.AuthLoginRequest;
-import cmc.surfmate.auth.presentation.dto.request.AuthSignupRequest;
+import cmc.surfmate.auth.presentation.dto.request.CommonSignupRequest;
 import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
 import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
 import cmc.surfmate.common.enums.Provider;
+import cmc.surfmate.common.enums.RoleType;
 import cmc.surfmate.user.domain.User;
 import cmc.surfmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,17 +31,33 @@ public class AuthService {
     private final TokenProvider tokenProvider;
 
 
-    public AuthSignupResponse signup(AuthSignupRequest authSignupRequest)
+    public AuthSignupResponse signup(CommonSignupRequest commonSignupRequest)
     {
-        User user = AuthAssembler.createNormalLoginUser(authSignupRequest,passwordEncoder);
+        if(commonSignupRequest.getPassword().isBlank())
+        {
+            return doSocialSignup(commonSignupRequest);
+        }
+        else{
+            return doNormalSignup(commonSignupRequest);
+        }
+    }
 
+    private AuthSignupResponse doNormalSignup(CommonSignupRequest commonSignupRequest) {
+
+        User user = AuthAssembler.createNormalLoginUser(commonSignupRequest,passwordEncoder);
         userRepository.save(user);
-
-        String accessToken = tokenProvider.createToken(user.getUid(),user.getRoleType());
-        return AuthAssembler.authSignupResponse(accessToken,user);
+        String accessToken = getToken(user.getUid(),user.getRoleType());
+        return AuthAssembler.authSignupResponse(accessToken, user);
     }
 
 
+    private AuthSignupResponse doSocialSignup(CommonSignupRequest commonSignupRequest) {
+
+        User user = AuthAssembler.createSocialLoginUser(commonSignupRequest);
+        userRepository.save(user);
+        String token = getToken(user.getUid(),user.getRoleType());
+        return AuthAssembler.oauthSignupResponse(token, user);
+    }
 
 
     public AuthLoginResponse login(AuthLoginRequest authLoginRequest)
@@ -53,7 +70,8 @@ public class AuthService {
         }
 
         user.addFCMToken(authLoginRequest.getFcmToken());
-        String accessToken = tokenProvider.createToken(user.getUid(),user.getRoleType());
+
+        String accessToken = getToken(user.getUid(), user.getRoleType());
 
         return AuthAssembler.authLoginResponse(accessToken,user);
     }
@@ -79,6 +97,10 @@ public class AuthService {
         {
             throw new IllegalArgumentException("중복된 닉네임입니다");
         }
+    }
+
+    private String getToken(String userId, RoleType role) {
+        return tokenProvider.createToken(userId, role);
     }
 
 //    public void logout(String uid, String accessToken)

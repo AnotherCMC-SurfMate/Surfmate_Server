@@ -15,7 +15,7 @@ public enum ExceptionCodeAndDetails {
 
     // HTTP Status : 400 Bad Request
 //    NOT_FOUND_ERROR_CODE("0001", "발생한 에러의 에러코드를 찾을 수 없습니다."),
-    BAD_REQUEST("E0002", "잘못된 요청입니다");
+    BAD_REQUEST("E0002", "중복된 닉네임입니다");
 //
 //    // HTTP Status : 404 Not Found
 //    NOT_FOUND_API("0003", "해당 경로에 대한 응답 API를 찾을 수 없습니다."),

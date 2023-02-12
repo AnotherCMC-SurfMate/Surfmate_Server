@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.handler;
+package cmc.surfmate.auth.common.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

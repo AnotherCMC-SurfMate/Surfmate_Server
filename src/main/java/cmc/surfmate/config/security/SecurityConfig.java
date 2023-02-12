@@ -1,8 +1,8 @@
 package cmc.surfmate.config.security;
 
-import cmc.surfmate.auth.handler.RestAccessDeniedHandler;
-import cmc.surfmate.auth.handler.RestAuthenticationEntryPoint;
-import cmc.surfmate.auth.filter.TokenAuthenticationFilter;
+import cmc.surfmate.auth.common.handler.RestAccessDeniedHandler;
+import cmc.surfmate.auth.common.handler.RestAuthenticationEntryPoint;
+import cmc.surfmate.auth.common.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -8,7 +8,6 @@ import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
 import cmc.surfmate.auth.presentation.dto.assembler.AuthAssembler;
 import cmc.surfmate.auth.presentation.dto.request.*;
-import cmc.surfmate.auth.presentation.dto.response.OAuthSignupResponse;
 import cmc.surfmate.common.response.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -40,13 +39,6 @@ public class AuthController {
 
     }
 
-    @Operation(summary = "소셜 로그인 시 회원가입")
-    @PostMapping("/social/signup")
-    public ResponseEntity<CommonResponse> socialSignup(@Valid @RequestBody OAuthSignupRequest oAuthSignupRequest)
-    {
-        OAuthSignupResponse oAuthSignupResponse = oAuthService.signup(oAuthSignupRequest);
-        return ResponseEntity.ok(new CommonResponse<>(200,"성공",oAuthSignupResponse));
-    }
 
     @Operation(summary = "일반 로그인")
     @PostMapping("/login")
@@ -57,11 +49,11 @@ public class AuthController {
     }
 
 
-    @Operation(summary = "일반 회원가입", description = "전화번호, 비밀번호, FCM TOKEN, 닉네임을 입력받음")
+    @Operation(summary = "회원가입", description = "전화번호, 비밀번호, FCM TOKEN, 닉네임을 입력받음")
     @PostMapping("/signup")
-    public ResponseEntity<CommonResponse> normalSignup(@Valid @RequestBody AuthSignupRequest authSignupRequest)
+    public ResponseEntity<CommonResponse> normalSignup(@Valid @RequestBody CommonSignupRequest commonSignupRequest)
     {
-        AuthSignupResponse authSignupResponse = authService.signup(authSignupRequest);
+        AuthSignupResponse authSignupResponse = authService.signup(commonSignupRequest);
         return ResponseEntity.ok(new CommonResponse(200, "성공",authSignupResponse));
     }
 
@@ -82,5 +74,7 @@ public class AuthController {
         authService.checkDuplicatedNickname(checkDuplicatedNicknameRequest.getNickname());
         return ResponseEntity.ok(new CommonResponse(200,"성공"));
     }
+
+
 
 }

@@ -1,4 +1,4 @@
-package cmc.surfmate.auth.filter;
+package cmc.surfmate.auth.common.filter;
 
 import cmc.surfmate.common.enums.RoleType;
 import io.jsonwebtoken.*;
