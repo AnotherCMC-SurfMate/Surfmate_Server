@@ -53,7 +53,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<CommonResponse> normalSignup(@Valid @RequestBody CommonSignupRequest commonSignupRequest)
     {
-        AuthSignupResponse authSignupResponse = authService.signup(commonSignupRequest);
+        AuthSignupResponse authSignupResponse = authService.signup(commonSignupRequest.toServiceDto());
         return ResponseEntity.ok(new CommonResponse(200, "성공",authSignupResponse));
     }
 

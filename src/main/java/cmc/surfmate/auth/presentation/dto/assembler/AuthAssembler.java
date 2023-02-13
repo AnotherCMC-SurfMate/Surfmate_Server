@@ -1,5 +1,6 @@
 package cmc.surfmate.auth.presentation.dto.assembler;
 
+import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
 import cmc.surfmate.auth.presentation.dto.request.CommonSignupRequest;
 import cmc.surfmate.auth.presentation.dto.response.*;
 import cmc.surfmate.common.enums.Provider;
@@ -17,31 +18,31 @@ import java.util.UUID;
  */
 public class AuthAssembler {
 
-    public static User createNormalLoginUser(CommonSignupRequest authSignupRequest, PasswordEncoder passwordEncoder)
+    public static User createNormalLoginUser(AuthSignupDto authSignupDto, PasswordEncoder passwordEncoder)
     {
-        String encodePassword = passwordEncoder.encode(authSignupRequest.getPassword());
+        String encodePassword = passwordEncoder.encode(authSignupDto.getPassword());
 
         return User.builder()
-                .phNum(authSignupRequest.getPhNum()) // 비밀번호 추가
+                .phNum(authSignupDto.getPhNum()) // 비밀번호 추가
                 .password(encodePassword)
                 .roleType(RoleType.USER)
-                .fcmToken(authSignupRequest.getFcmToken())
+                .fcmToken(authSignupDto.getFcmToken())
                 .uid(UUID.randomUUID().toString())
                 .provider(Provider.NORMAL)
-                .nickname(authSignupRequest.getNickname())
+                .nickname(authSignupDto.getNickname())
                 .build();
     }
 
-    public static User createSocialLoginUser(CommonSignupRequest authSignupRequest)
+    public static User createSocialLoginUser(AuthSignupDto authSignupDto)
     {
         return User.builder()
-                .phNum(authSignupRequest.getPhNum())
+                .phNum(authSignupDto.getPhNum())
                 .password("NO_PASSWORD")
                 .roleType(RoleType.USER)
-                .fcmToken(authSignupRequest.getFcmToken())
-                .uid(authSignupRequest.getUid())
-                .provider(authSignupRequest.getProvider())
-                .nickname(authSignupRequest.getNickname())
+                .fcmToken(authSignupDto.getFcmToken())
+                .uid(authSignupDto.getUid())
+                .provider(authSignupDto.getProvider())
+                .nickname(authSignupDto.getNickname())
                 .build();
     }
 

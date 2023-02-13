@@ -1,9 +1,11 @@
 package cmc.surfmate.auth.application.impl;
 
 import cmc.surfmate.auth.application.impl.dto.request.AuthLoginDto;
+import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
 import cmc.surfmate.auth.common.filter.TokenProvider;
 import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
+import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import cmc.surfmate.common.exception.GlobalBadRequestException;
@@ -154,6 +156,38 @@ class AuthServiceTest {
       org.assertj.core.api.Assertions.assertThat(result).isNotNull();
       org.assertj.core.api.Assertions.assertThat(result.getToken()).isEqualTo("test_token_value");
       org.assertj.core.api.Assertions.assertThat(result.getUser().getUid()).isEqualTo("testUid");
+  }
+
+  @DisplayName("요청값에 패스워드가 없으면 소셜 회원가입을 진행한다.")
+  @Test
+  public void select_normal_signup()
+  {
+      // Given
+      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin", "testUid", Provider.KAKAO, "", "fcmToken");
+      lenient().when(tokenProvider.createToken(any(),any())).thenReturn("test_token_value");
+
+      // When
+      AuthSignupResponse result = authService.signup(mockDto);
+
+      // Then
+      org.assertj.core.api.Assertions.assertThat(result.getUser().getProvider()).isEqualTo(Provider.KAKAO);
+      org.assertj.core.api.Assertions.assertThat(result.getToken()).isEqualTo("test_token_value");
+  }
+
+  @DisplayName("요청값에 패스워드가 있으면 일반 회원가입을 진행한다.")
+  @Test
+  public void select_social_signup()
+  {
+      // Given
+      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin", "testUid", null, "password12", "fcmToken");
+      lenient().when(tokenProvider.createToken(any(),any())).thenReturn("test_token_value");
+
+      // When
+      AuthSignupResponse result = authService.signup(mockDto);
+
+      // Then
+      org.assertj.core.api.Assertions.assertThat(result.getUser().getProvider()).isEqualTo(Provider.NORMAL);
+      org.assertj.core.api.Assertions.assertThat(result.getToken()).isEqualTo("test_token_value");
   }
 
 

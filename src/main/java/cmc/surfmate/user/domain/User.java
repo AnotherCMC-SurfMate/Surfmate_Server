@@ -1,6 +1,5 @@
 package cmc.surfmate.user.domain;
 
-import cmc.surfmate.common.enums.Gender;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import jakarta.persistence.*;
@@ -38,9 +37,6 @@ public class User {
     private String phNum;  // 핸드폰 번호
 
     private Boolean isOwner;  // 차 보유 여부
-
-    @Enumerated(EnumType.STRING)
-    private Gender gender;  // 성별
 
     // soft delete 여부
     private String isDelete;  // soft delete 여부

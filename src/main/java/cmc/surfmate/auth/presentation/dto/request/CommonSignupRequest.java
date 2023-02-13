@@ -1,5 +1,6 @@
 package cmc.surfmate.auth.presentation.dto.request;
 
+import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
 import cmc.surfmate.common.enums.Provider;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -30,4 +31,9 @@ public class CommonSignupRequest {
 
     // 이거는 일반 로그인 용
     private String fcmToken;
+
+    public AuthSignupDto toServiceDto()
+    {
+        return new AuthSignupDto(phNum,nickname, uid, provider,password,fcmToken);
+    }
 }

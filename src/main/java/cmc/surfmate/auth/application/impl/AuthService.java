@@ -1,6 +1,7 @@
 package cmc.surfmate.auth.application.impl;
 
 import cmc.surfmate.auth.application.impl.dto.request.AuthLoginDto;
+import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
 import cmc.surfmate.auth.common.filter.TokenProvider;
 import cmc.surfmate.auth.presentation.dto.assembler.AuthAssembler;
@@ -34,29 +35,29 @@ public class AuthService {
     private final TokenProvider tokenProvider;
 
 
-    public AuthSignupResponse signup(CommonSignupRequest commonSignupRequest)
+    public AuthSignupResponse signup(AuthSignupDto authSignupDto)
     {
-        if(commonSignupRequest.getPassword().isBlank())
+        if(authSignupDto.getPassword().isBlank())
         {
-            return doSocialSignup(commonSignupRequest);
+            return doSocialSignup(authSignupDto);
         }
         else{
-            return doNormalSignup(commonSignupRequest);
+            return doNormalSignup(authSignupDto);
         }
     }
 
-    private AuthSignupResponse doNormalSignup(CommonSignupRequest commonSignupRequest) {
+    private AuthSignupResponse doNormalSignup(AuthSignupDto authSignupDto) {
 
-        User user = AuthAssembler.createNormalLoginUser(commonSignupRequest,passwordEncoder);
+        User user = AuthAssembler.createNormalLoginUser(authSignupDto,passwordEncoder);
         userRepository.save(user);
         String accessToken = getToken(user.getUid(),user.getRoleType());
         return AuthAssembler.authSignupResponse(accessToken, user);
     }
 
 
-    private AuthSignupResponse doSocialSignup(CommonSignupRequest commonSignupRequest) {
+    private AuthSignupResponse doSocialSignup(AuthSignupDto authSignupDto) {
 
-        User user = AuthAssembler.createSocialLoginUser(commonSignupRequest);
+        User user = AuthAssembler.createSocialLoginUser(authSignupDto);
         userRepository.save(user);
         String token = getToken(user.getUid(),user.getRoleType());
         return AuthAssembler.oauthSignupResponse(token, user);
