@@ -1,5 +1,6 @@
 package cmc.surfmate.auth.presentation.dto.request;
 
+import cmc.surfmate.auth.application.impl.dto.request.AuthLoginDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -21,5 +22,10 @@ public class AuthLoginRequest {
     private String password;
     @Schema(description = "인증 유저 디바이스 fcm token")
     private String fcmToken;
+
+    public AuthLoginDto toServiceDto()
+    {
+        return new AuthLoginDto(phNum,password,fcmToken);
+    }
 
 }

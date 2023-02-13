@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.1'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'jacoco'
 }
 
 group = 'cmc'
@@ -14,6 +15,45 @@ configurations {
 	}
 }
 
+jacoco {
+	toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+	reports {
+		// 원하는 리포트를 켜고 끌 수 있습니다.
+		html.enabled true
+		xml.enabled false
+		csv.enabled false
+	}
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	// 이 커버리지 기준은 이 글의 맨 아래에서 다시 설명하겠습니다.
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS'
+
+			limit {
+				counter = 'CLASS'
+				value = 'COVEREDRATIO'
+				minimum = 0.00
+			}
+			excludes = [
+					'*.test.*',
+					'**.SurfmateApplication*',
+					'Q*.class',
+					'**.*Request*',
+					'**.*Response*',
+					'**.*Exception*',
+					'**.*Configuration*',
+					'**.*Dto*'
+			]
+		}
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -39,7 +79,9 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.flywaydb:flyway-mysql:9.14.1'
 
+	runtimeOnly 'com.h2database:h2'
     // FCM
 	implementation 'com.google.firebase:firebase-admin:7.1.1'
 
@@ -69,6 +111,7 @@ dependencies {
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'com.tngtech.archunit:archunit-junit5:0.17.0'
 }
 
 //dependencyManagement {

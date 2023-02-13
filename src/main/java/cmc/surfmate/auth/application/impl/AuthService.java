@@ -1,14 +1,15 @@
 package cmc.surfmate.auth.application.impl;
 
+import cmc.surfmate.auth.application.impl.dto.request.AuthLoginDto;
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
 import cmc.surfmate.auth.common.filter.TokenProvider;
 import cmc.surfmate.auth.presentation.dto.assembler.AuthAssembler;
-import cmc.surfmate.auth.presentation.dto.request.AuthLoginRequest;
 import cmc.surfmate.auth.presentation.dto.request.CommonSignupRequest;
 import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
 import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
+import cmc.surfmate.common.exception.GlobalBadRequestException;
 import cmc.surfmate.user.domain.User;
 import cmc.surfmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static cmc.surfmate.common.exception.ExceptionCodeAndDetails.*;
 
 /**
  * AuthService.java
@@ -60,16 +63,18 @@ public class AuthService {
     }
 
 
-    public AuthLoginResponse login(AuthLoginRequest authLoginRequest)
+    public AuthLoginResponse login(AuthLoginDto authLoginDto)
     {
 
-        User user = userRepository.findUserByPhNum(authLoginRequest.getPhNum()).orElseThrow(()->{throw new IllegalArgumentException();});
+        User user = userRepository.findUserByPhNum(authLoginDto.getPhNum()).orElseThrow(()->
+        {throw new GlobalBadRequestException(NOT_EXIST_USER);
+        });
 
-        if(!passwordEncoder.matches(authLoginRequest.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException();
+        if(!passwordEncoder.matches(authLoginDto.getPassword(), user.getPassword())) {
+            throw new GlobalBadRequestException(INVALID_PASSWORD);
         }
 
-        user.addFCMToken(authLoginRequest.getFcmToken());
+        user.addFCMToken(authLoginDto.getFcmToken());
 
         String accessToken = getToken(user.getUid(), user.getRoleType());
 
@@ -95,7 +100,7 @@ public class AuthService {
         Optional<User> userByNickname = userRepository.findUserByNickname(nickname);
         if(userByNickname.isPresent())
         {
-            throw new IllegalArgumentException("중복된 닉네임입니다");
+            throw new GlobalBadRequestException(DUPLICATED_NICKNAME);
         }
     }
 
@@ -103,16 +108,5 @@ public class AuthService {
         return tokenProvider.createToken(userId, role);
     }
 
-//    public void logout(String uid, String accessToken)
-//    {
-//        authenticatedUserChecker.checkAuthenticatedUserExist(uid);
-//        redisTemplate.opsForValue().set(accessToken,"blackList");
-//    }
 
-//    private void withdraw(String uid,String accessToken) {
-//
-//        User user = authenticatedUserChecker.checkAuthenticatedUserExist(uid);
-//        userRepository.delete(user);
-//        redisTemplate.opsForValue().set(accessToken,"blackList");
-//    }
 }

@@ -44,7 +44,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<CommonResponse> normalLogin(@Valid @RequestBody AuthLoginRequest authLoginRequest)
     {
-        AuthLoginResponse authLoginResponse = authService.login(authLoginRequest);
+        AuthLoginResponse authLoginResponse = authService.login(authLoginRequest.toServiceDto());
         return ResponseEntity.ok(new CommonResponse<>(200,"성공",authLoginResponse));
     }
 
