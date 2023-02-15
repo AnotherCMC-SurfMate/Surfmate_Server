@@ -204,4 +204,34 @@ class AuthServiceTest {
       // Then
       org.assertj.core.api.Assertions.assertThat(token).isNotNull();
   }
+
+  @DisplayName("비밀번호 찾기에서 해당 전화번호에 해당하는 유저가 없을 경우 예외 반환")
+  @Test
+  void user_not_fount_exception_change_password()
+  {
+      // given
+      given(userRepository.findUserByPhNum(anyString())).willReturn(Optional.empty());
+
+      Assertions.assertThrows(GlobalBadRequestException.class, () -> {
+          authService.changePassword("01027570146","password123");
+      });
+
+  }
+
+    @DisplayName("비밀번호 찾기 시, 휴대폰 인증 성공하면 암호화된 새로운 비밀번호 할당")
+    @Test
+    void change_new_encrypt_password()
+    {
+        // given
+        User mockUser = User.builder().nickname("jemin").password("password12").build();
+        given(userRepository.findUserByPhNum(anyString())).willReturn(Optional.of(mockUser));
+        given(passwordEncoder.encode(any())).willReturn("encrypt_password");
+
+        // when
+        authService.changePassword("01027570146","password123");
+
+        // then
+        org.assertj.core.api.Assertions.assertThat(mockUser.getPassword()).isEqualTo("encrypt_password");
+
+    }
 }
