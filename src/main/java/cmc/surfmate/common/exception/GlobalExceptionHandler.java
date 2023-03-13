@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GlobalBadRequestException.class)
     public ResponseEntity<GlobalExceptionResponse> badRequestException(GlobalBadRequestException e)
     {
-        return ResponseEntity.badRequest().body(new GlobalExceptionResponse(e.getExceptionCodeAndDetails().getCode(),e.getExceptionCodeAndDetails().getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GlobalExceptionResponse(e.getExceptionCodeAndDetails().getCode(),e.getExceptionCodeAndDetails().getMessage()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

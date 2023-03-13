@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthAssembler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.auth.presentation.dto.assembler</a> &gt; <span class="el_source">AuthAssembler.java</span></div><h1>AuthAssembler.java</h1><pre class="source lang-java linenums">package cmc.surfmate.auth.presentation.dto.assembler;
+
+import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
+import cmc.surfmate.auth.presentation.dto.request.CommonSignupRequest;
+import cmc.surfmate.auth.presentation.dto.response.*;
+import cmc.surfmate.common.enums.Provider;
+import cmc.surfmate.common.enums.RoleType;
+import cmc.surfmate.common.response.CommonResponse;
+import cmc.surfmate.user.domain.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.UUID;
+
+/**
+ * AuthAssembler.java
+ *
+ * @author jemlog
+ */
+<span class="nc" id="L19">public class AuthAssembler {</span>
+
+    public static User createNormalLoginUser(AuthSignupDto authSignupDto, PasswordEncoder passwordEncoder)
+    {
+<span class="fc" id="L23">        String encodePassword = passwordEncoder.encode(authSignupDto.getPassword());</span>
+
+<span class="fc" id="L25">        return User.builder()</span>
+<span class="fc" id="L26">                .phNum(authSignupDto.getPhNum()) // 비밀번호 추가</span>
+<span class="fc" id="L27">                .password(encodePassword)</span>
+<span class="fc" id="L28">                .roleType(RoleType.USER)</span>
+<span class="fc" id="L29">                .fcmToken(authSignupDto.getFcmToken())</span>
+<span class="fc" id="L30">                .uid(UUID.randomUUID().toString())</span>
+<span class="fc" id="L31">                .provider(Provider.NORMAL)</span>
+<span class="fc" id="L32">                .nickname(authSignupDto.getNickname())</span>
+<span class="fc" id="L33">                .build();</span>
+    }
+
+    public static User createSocialLoginUser(AuthSignupDto authSignupDto)
+    {
+<span class="fc" id="L38">        return User.builder()</span>
+<span class="fc" id="L39">                .phNum(authSignupDto.getPhNum())</span>
+<span class="fc" id="L40">                .password(&quot;NO_PASSWORD&quot;)</span>
+<span class="fc" id="L41">                .roleType(RoleType.USER)</span>
+<span class="fc" id="L42">                .fcmToken(authSignupDto.getFcmToken())</span>
+<span class="fc" id="L43">                .uid(authSignupDto.getUid())</span>
+<span class="fc" id="L44">                .provider(authSignupDto.getProvider())</span>
+<span class="fc" id="L45">                .nickname(authSignupDto.getNickname())</span>
+<span class="fc" id="L46">                .build();</span>
+    }
+
+    public static AuthSignupResponse authSignupResponse(String accessToken, User user)
+    {
+<span class="fc" id="L51">        return new AuthSignupResponse(new AuthUserData(user.getId(), user.getUid(), user.getProvider(), user.getPhNum(), user.getNickname()), accessToken);</span>
+    }
+
+
+    public static AuthLoginResponse authLoginResponse(String accessToken, User user)
+    {
+<span class="fc" id="L57">        return new AuthLoginResponse(new AuthUserData(user.getId(),</span>
+<span class="fc" id="L58">                user.getUid(),</span>
+<span class="fc" id="L59">                user.getProvider(),</span>
+<span class="fc" id="L60">                user.getPhNum(),</span>
+<span class="fc" id="L61">                user.getNickname()),</span>
+                accessToken);
+    }
+
+    public static AuthSignupResponse oauthSignupResponse(String accessToken, User user)
+    {
+<span class="fc" id="L67">        return new AuthSignupResponse(new AuthUserData(user.getId(),</span>
+<span class="fc" id="L68">                user.getUid(),</span>
+<span class="fc" id="L69">                user.getProvider(),</span>
+<span class="fc" id="L70">                user.getPhNum(),</span>
+<span class="fc" id="L71">                user.getNickname()),</span>
+                accessToken);
+    }
+
+    public static CommonResponse departNewUser(String token, boolean isNewUser, User user)
+    {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if(isNewUser == true)</span>
+        {
+<span class="nc" id="L79">            return new CommonResponse(200,</span>
+                    &quot;회원가입 필요&quot;,
+                    new OAuthLoginResponse(new AuthUserData(
+<span class="nc" id="L82">                            user.getId(), // 없을 예정</span>
+<span class="nc" id="L83">                            user.getUid(), // 소셜 로그인 ID</span>
+<span class="nc" id="L84">                            user.getProvider(), // 소셜 로그인 type</span>
+<span class="nc" id="L85">                            user.getPhNum(),  // phNum -&gt; 없을 예정</span>
+<span class="nc" id="L86">                            user.getNickname()  // nickname  -&gt; 없을 예정</span>
+                    ),isNewUser)
+            );
+        }
+        else{
+<span class="nc" id="L91">            return new CommonResponse(200,</span>
+                    &quot;성공&quot;,
+<span class="nc" id="L93">                    new OAuthLoginResponse(new AuthUserData(user.getId(),</span>
+<span class="nc" id="L94">                            user.getUid(),</span>
+<span class="nc" id="L95">                            user.getProvider(),</span>
+<span class="nc" id="L96">                            user.getPhNum(),</span>
+<span class="nc" id="L97">                            user.getNickname()),</span>
+                            token,
+                            isNewUser)
+            );
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

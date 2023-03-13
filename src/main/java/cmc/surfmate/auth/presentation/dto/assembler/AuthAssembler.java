@@ -1,7 +1,6 @@
 package cmc.surfmate.auth.presentation.dto.assembler;
 
 import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
-import cmc.surfmate.auth.presentation.dto.request.CommonSignupRequest;
 import cmc.surfmate.auth.presentation.dto.response.*;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
@@ -29,7 +28,10 @@ public class AuthAssembler {
                 .fcmToken(authSignupDto.getFcmToken())
                 .uid(UUID.randomUUID().toString())
                 .provider(Provider.NORMAL)
+                .gender(authSignupDto.getGender())
+                .birthday(authSignupDto.getBirthday())
                 .nickname(authSignupDto.getNickname())
+                .username(authSignupDto.getUsername())
                 .build();
     }
 
@@ -41,8 +43,11 @@ public class AuthAssembler {
                 .roleType(RoleType.USER)
                 .fcmToken(authSignupDto.getFcmToken())
                 .uid(authSignupDto.getUid())
+                .gender(authSignupDto.getGender())
+                .birthday(authSignupDto.getBirthday())
                 .provider(authSignupDto.getProvider())
                 .nickname(authSignupDto.getNickname())
+                .username(authSignupDto.getUsername())
                 .build();
     }
 

@@ -37,6 +37,13 @@ public class HealthController {
 
         return ResponseEntity.ok(new CommonResponse(200,"성공",result));
     }
+
+    @GetMapping("/token/check")
+    public ResponseEntity<CommonResponse> tokenCheck()
+    {
+        return ResponseEntity.ok(new CommonResponse(200,"성공"));
+    }
+
     @GetMapping("/")
     public String health()
     {

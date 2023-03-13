@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.auth.presentation</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package cmc.surfmate.auth.presentation;
+
+import cmc.surfmate.auth.application.impl.AuthService;
+import cmc.surfmate.auth.application.impl.OAuthService;
+import cmc.surfmate.auth.application.impl.dto.response.OAuthLoginResponseDto;
+import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
+import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
+import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;
+import cmc.surfmate.auth.presentation.dto.assembler.AuthAssembler;
+import cmc.surfmate.auth.presentation.dto.request.*;
+import cmc.surfmate.common.response.CommonResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * AuthController.java
+ *
+ * @author jemlog
+ */
+@RestController
+<span class="fc" id="L24">@RequiredArgsConstructor</span>
+@RequestMapping(&quot;/auth&quot;)
+public class AuthController {
+
+    private final AuthService authService;
+    private final OAuthService oAuthService;
+
+    @Operation(summary = &quot;소셜 로그인&quot;,description = &quot;소셜 로그인 타입에 따라 로그인 방식을 분기&quot;)
+    @PostMapping(&quot;/social&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; socialLogin(@Valid @RequestBody OAuthLoginRequest oAuthLoginRequest)
+    {
+<span class="nc" id="L35">        OAuthLoginResponseDto oAuthLoginResponse = oAuthService.login(oAuthLoginRequest);</span>
+<span class="nc" id="L36">        return ResponseEntity.ok(AuthAssembler.departNewUser(oAuthLoginResponse.getAccessToken(),</span>
+<span class="nc" id="L37">                                                             oAuthLoginResponse.getIsNewUser(),</span>
+<span class="nc" id="L38">                                                             oAuthLoginResponse.getUser()));</span>
+
+    }
+
+
+    @Operation(summary = &quot;일반 로그인&quot;)
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; normalLogin(@Valid @RequestBody AuthLoginRequest authLoginRequest)
+    {
+<span class="nc" id="L47">        AuthLoginResponse authLoginResponse = authService.login(authLoginRequest.toServiceDto());</span>
+<span class="nc" id="L48">        return ResponseEntity.ok(new CommonResponse&lt;&gt;(200,&quot;성공&quot;,authLoginResponse));</span>
+    }
+
+
+    @Operation(summary = &quot;회원가입&quot;, description = &quot;전화번호, 비밀번호, FCM TOKEN, 닉네임을 입력받음&quot;)
+    @PostMapping(&quot;/signup&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; normalSignup(@Valid @RequestBody CommonSignupRequest commonSignupRequest)
+    {
+<span class="nc" id="L56">        AuthSignupResponse authSignupResponse = authService.signup(commonSignupRequest.toServiceDto());</span>
+<span class="nc" id="L57">        return ResponseEntity.ok(new CommonResponse(200, &quot;성공&quot;,authSignupResponse));</span>
+    }
+
+
+    @Operation(summary = &quot;1인 1계정 체크&quot;, description = &quot;전화번호를 기준으로 가입된 계정이 있는지 체크&quot;)
+    @PostMapping(&quot;/check/account&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; checkDuplicatedAccount(@RequestBody CheckDuplicatedAccountRequest checkDuplicatedAccountRequest)
+    {
+<span class="fc" id="L65">        CheckDuplicatedAccountResponse response = authService.checkDuplicatedAccount(checkDuplicatedAccountRequest.getPhNum());</span>
+<span class="fc" id="L66">        return ResponseEntity.ok(new CommonResponse(200,&quot;성공&quot;,response));</span>
+    }
+
+
+    @Operation(summary = &quot;닉네임 중복 체크&quot;, description = &quot;닉네임 설정 시 중복 여부 판단&quot;)
+    @PostMapping(&quot;/check/nickname&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; checkDuplicatedNickname(@RequestBody CheckDuplicatedNicknameRequest checkDuplicatedNicknameRequest)
+    {
+<span class="nc" id="L74">        authService.checkDuplicatedNickname(checkDuplicatedNicknameRequest.getNickname());</span>
+<span class="nc" id="L75">        return ResponseEntity.ok(new CommonResponse(200,&quot;성공&quot;));</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

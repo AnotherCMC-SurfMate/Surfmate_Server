@@ -14,7 +14,6 @@ public class GlobalBadRequestException extends RuntimeException{
 
     public GlobalBadRequestException(ExceptionCodeAndDetails exceptionCodeAndDetails)
     {
-        super(exceptionCodeAndDetails.getMessage());
         this.exceptionCodeAndDetails = exceptionCodeAndDetails;
     }
 }

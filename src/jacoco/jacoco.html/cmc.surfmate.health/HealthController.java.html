@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HealthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.health</a> &gt; <span class="el_source">HealthController.java</span></div><h1>HealthController.java</h1><pre class="source lang-java linenums">package cmc.surfmate.health;
+
+import cmc.surfmate.common.response.CommonResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * HealthController.java
+ *
+ * @author jemlog
+ */
+@RestController
+<span class="nc" id="L17">public class HealthController {</span>
+
+    @GetMapping(&quot;/health&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; getHealth()
+    {
+<span class="nc" id="L22">        HashMap&lt;String,Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L23">        HashMap&lt;String,String&gt; map2 = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L24">        map2.put(&quot;inner&quot;,&quot;머식&quot;);</span>
+<span class="nc" id="L25">        map.put(&quot;outer&quot;,map2);</span>
+<span class="nc" id="L26">        return ResponseEntity.ok(new CommonResponse(200,&quot;성공&quot;,map));</span>
+    }
+
+    @GetMapping(&quot;/health2&quot;)
+    public ResponseEntity&lt;CommonResponse&gt; getHealth2()
+    {
+<span class="nc" id="L32">        HashMap&lt;String,String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L33">        HashMap&lt;String,String&gt; map2 = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L34">        map2.put(&quot;first&quot;,&quot;머식&quot;);</span>
+<span class="nc" id="L35">        map.put(&quot;second&quot;,&quot;제민32131&quot;);</span>
+<span class="nc" id="L36">        List&lt;HashMap&lt;String, String&gt;&gt; result = List.of(map, map2);</span>
+
+<span class="nc" id="L38">        return ResponseEntity.ok(new CommonResponse(200,&quot;성공&quot;,result));</span>
+    }
+    @GetMapping(&quot;/&quot;)
+    public String health()
+    {
+<span class="nc" id="L43">        return &quot;health&quot;;</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

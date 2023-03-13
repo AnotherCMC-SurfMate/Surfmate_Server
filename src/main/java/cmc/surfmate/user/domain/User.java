@@ -1,5 +1,6 @@
 package cmc.surfmate.user.domain;
 
+import cmc.surfmate.common.enums.Gender;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -30,6 +32,8 @@ public class User {
 
     private String nickname;  // 닉네임
 
+    private String username;  // 본명
+
     private String password;  // 비밀번호
 
     private String fcmToken;  // 유저 토큰 값
@@ -47,7 +51,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    private String profileImage;  // 프로필 이미지
+    private String profileImage;  // 프로필 이미지 -> 받아올 수 있으면 설정, 아니면 디폴트 이미지 넣기
+
+    private Gender gender;
+
+    private LocalDate birthday;
 
     private LocalDateTime createdAt;
 
@@ -59,14 +67,22 @@ public class User {
     }
 
     @Builder
-    public User(String uid, String nickname, String phNum, String password, RoleType roleType, Provider provider,String fcmToken) {
+    public User(String uid, String nickname,String username, String phNum, String password, RoleType roleType, Provider provider,String fcmToken,Gender gender,LocalDate birthday) {
         this.phNum = phNum;
         this.uid = uid;
         this.nickname = nickname;
+        this.username = username;
         this.fcmToken = fcmToken;
         this.password = password;
         this.roleType = roleType;
         this.provider = provider;
+        this.birthday = birthday;
+        this.gender = gender;
+    }
+
+    public void changePassword(String password)
+    {
+        this.password = password;
     }
 
     @PrePersist

@@ -10,13 +10,16 @@ import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
 import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
+import cmc.surfmate.common.exception.ExceptionCodeAndDetails;
 import cmc.surfmate.common.exception.GlobalBadRequestException;
 import cmc.surfmate.user.domain.User;
 import cmc.surfmate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static cmc.surfmate.common.exception.ExceptionCodeAndDetails.*;
@@ -28,6 +31,7 @@ import static cmc.surfmate.common.exception.ExceptionCodeAndDetails.*;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -37,7 +41,7 @@ public class AuthService {
 
     public AuthSignupResponse signup(AuthSignupDto authSignupDto)
     {
-        if(authSignupDto.getPassword().isBlank())
+        if(Objects.isNull(authSignupDto.getPassword()))
         {
             return doSocialSignup(authSignupDto);
         }
@@ -68,7 +72,7 @@ public class AuthService {
     {
 
         User user = userRepository.findUserByPhNum(authLoginDto.getPhNum()).orElseThrow(()->
-        {throw new GlobalBadRequestException(NOT_EXIST_USER);
+        {throw new GlobalBadRequestException(INVALID_PHONE_NUMBER);
         });
 
         if(!passwordEncoder.matches(authLoginDto.getPassword(), user.getPassword())) {
@@ -103,6 +107,17 @@ public class AuthService {
         {
             throw new GlobalBadRequestException(DUPLICATED_NICKNAME);
         }
+    }
+
+    // 비밀번호 초기화 후에 그 비밀번호로 다시 로그인
+    public void changePassword(String phNum, String newPassword)
+    {
+        User user = userRepository.findUserByPhNum(phNum).orElseThrow(() -> {
+            throw new GlobalBadRequestException(NOT_EXIST_USER);
+        });
+
+        String password = passwordEncoder.encode(newPassword);
+        user.changePassword(password);
     }
 
     private String getToken(String userId, RoleType role) {

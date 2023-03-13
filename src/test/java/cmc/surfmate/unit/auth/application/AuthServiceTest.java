@@ -1,5 +1,6 @@
-package cmc.surfmate.auth.application.impl;
+package cmc.surfmate.unit.auth.application;
 
+import cmc.surfmate.auth.application.impl.AuthService;
 import cmc.surfmate.auth.application.impl.dto.request.AuthLoginDto;
 import cmc.surfmate.auth.application.impl.dto.request.AuthSignupDto;
 import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountResponse;

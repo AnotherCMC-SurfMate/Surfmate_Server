@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TokenProvider.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.auth.common.filter</a> &gt; <span class="el_source">TokenProvider.java</span></div><h1>TokenProvider.java</h1><pre class="source lang-java linenums">package cmc.surfmate.auth.common.filter;
+
+import cmc.surfmate.common.enums.RoleType;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
+
+/**
+ * TokenProvider.java
+ *
+ * @author jemlog
+ */
+<span class="fc" id="L27">@Slf4j</span>
+@Component
+public class TokenProvider {
+
+    protected static final String AUTHORITIES_KEY = &quot;auth&quot;;
+    protected final String secret;
+    protected final long tokenValidityInMilliseconds;
+    protected Key key;
+
+
+<span class="fc" id="L37">    public TokenProvider(@Value(&quot;${auth.secret}&quot;) String secret, @Value(&quot;${auth.tokenValidation}&quot;) long tokenValidityInSeconds) {</span>
+<span class="fc" id="L38">        this.secret = secret;</span>
+<span class="fc" id="L39">        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;</span>
+<span class="fc" id="L40">        byte[] keyBytes = Decoders.BASE64.decode(secret);</span>
+<span class="fc" id="L41">        this.key = Keys.hmacShaKeyFor(keyBytes);</span>
+<span class="fc" id="L42">    }</span>
+
+    // 토큰 생성
+    public String createToken(String uid, RoleType role) {
+
+        // 현재시간
+<span class="fc" id="L48">        long now = (new Date()).getTime();</span>
+
+        // 만료되는 날짜
+<span class="fc" id="L51">        Date validity = new Date(now + this.tokenValidityInMilliseconds);</span>
+
+<span class="fc" id="L53">        return Jwts.builder()</span>
+<span class="fc" id="L54">                .setSubject(uid)</span>
+<span class="fc" id="L55">                .claim(AUTHORITIES_KEY, role.toString())</span>
+<span class="fc" id="L56">                .signWith(key, SignatureAlgorithm.HS512)</span>
+<span class="fc" id="L57">                .setExpiration(validity)</span>
+<span class="fc" id="L58">                .compact();</span>
+
+    }
+
+
+    public Authentication getAuthentication(String token) {
+
+        Claims claims = Jwts
+<span class="nc" id="L66">                .parserBuilder()</span>
+<span class="nc" id="L67">                .setSigningKey(key)</span>
+<span class="nc" id="L68">                .build()</span>
+<span class="nc" id="L69">                .parseClaimsJws(token)</span>
+<span class="nc" id="L70">                .getBody();</span>
+
+<span class="nc" id="L72">        Collection&lt;? extends GrantedAuthority&gt; authorities =</span>
+<span class="nc" id="L73">                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(&quot;,&quot;))</span>
+<span class="nc" id="L74">                        .map(SimpleGrantedAuthority::new)</span>
+<span class="nc" id="L75">                        .collect(Collectors.toList());</span>
+
+<span class="nc" id="L77">        User principal = new User(claims.getSubject(), &quot;&quot;, authorities);</span>
+
+<span class="nc" id="L79">        return new UsernamePasswordAuthenticationToken(principal, token, authorities);</span>
+    }
+
+    // 토큰 유효성 검사
+    public boolean validateToken(String token) {
+        try {
+<span class="nc" id="L85">            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();</span>
+<span class="nc" id="L86">            return true;</span>
+<span class="nc" id="L87">        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {</span>
+<span class="nc" id="L88">            log.info(&quot;잘못된 JWT 서명입니다.&quot;);</span>
+<span class="nc" id="L89">        } catch (ExpiredJwtException e) {</span>
+<span class="nc" id="L90">            log.info(&quot;만료된 JWT 토큰입니다.&quot;);</span>
+<span class="nc" id="L91">        } catch (UnsupportedJwtException e) {</span>
+<span class="nc" id="L92">            log.info(&quot;지원되지 않는 JWT 토큰입니다.&quot;);</span>
+<span class="nc" id="L93">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L94">            log.info(&quot;JWT 토큰이 잘못되었습니다.&quot;);</span>
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

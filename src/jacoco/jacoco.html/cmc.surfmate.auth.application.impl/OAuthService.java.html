@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OAuthService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.auth.application.impl</a> &gt; <span class="el_source">OAuthService.java</span></div><h1>OAuthService.java</h1><pre class="source lang-java linenums">package cmc.surfmate.auth.application.impl;
+
+import cmc.surfmate.auth.application.LoginClient;
+import cmc.surfmate.auth.application.LoginClientFactory;
+import cmc.surfmate.auth.application.impl.dto.response.OAuthLoginResponseDto;
+import cmc.surfmate.auth.common.filter.TokenProvider;
+import cmc.surfmate.auth.presentation.dto.request.OAuthLoginRequest;
+import cmc.surfmate.common.enums.RoleType;
+import cmc.surfmate.user.domain.User;
+import cmc.surfmate.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+/**
+ * OAuthService.java
+ *
+ * @author jemlog
+ */
+
+@Service
+@Transactional(readOnly = true)
+<span class="nc" id="L25">@RequiredArgsConstructor</span>
+public class OAuthService {
+
+    private final UserRepository userRepository;
+    private final LoginClientFactory loginClientFactory;
+    private final TokenProvider tokenProvider;
+
+    @Transactional
+    public OAuthLoginResponseDto login(OAuthLoginRequest oAuthLoginRequest) {
+
+<span class="nc" id="L35">        LoginClient loginClient = loginClientFactory.find(oAuthLoginRequest.getProvider());</span>
+<span class="nc" id="L36">        User socialUser = loginClient.getUserData(oAuthLoginRequest.getAccessToken());</span>
+
+        /*
+        유저가 존재하면 인증 성공
+        유저가 존재하지 않으면 회원가입으로 넘어감
+         */
+<span class="nc" id="L42">        Optional&lt;User&gt; findUser = userRepository.findUserByUid(socialUser.getUid());</span>
+
+        // 기존 유저가 존재하면 로그인 성공
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if(findUser.isPresent())</span>
+        {
+<span class="nc" id="L47">            String accessToken = getToken(socialUser.getUid(), socialUser.getRoleType());</span>
+<span class="nc" id="L48">            findUser.get().addFCMToken(socialUser.getFcmToken());</span>
+<span class="nc" id="L49">            return new OAuthLoginResponseDto(accessToken, false, findUser.get());</span>
+        }
+
+        // 존재하지 않는다면 회원가입으로 이동
+<span class="nc" id="L53">        socialUser.addFCMToken(oAuthLoginRequest.getFcmToken());</span>
+<span class="nc" id="L54">        return new OAuthLoginResponseDto(null,true,socialUser);</span>
+
+
+    }
+
+    private String getToken(String userId, RoleType role) {
+<span class="nc" id="L60">        return tokenProvider.createToken(userId, role);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

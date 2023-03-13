@@ -39,7 +39,6 @@ public class AuthController {
 
     }
 
-
     @Operation(summary = "일반 로그인")
     @PostMapping("/login")
     public ResponseEntity<CommonResponse> normalLogin(@Valid @RequestBody AuthLoginRequest authLoginRequest)
@@ -74,7 +73,5 @@ public class AuthController {
         authService.checkDuplicatedNickname(checkDuplicatedNicknameRequest.getNickname());
         return ResponseEntity.ok(new CommonResponse(200,"성공"));
     }
-
-
 
 }

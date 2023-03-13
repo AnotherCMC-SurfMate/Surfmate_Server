@@ -17,7 +17,7 @@ public class AuthLoginRequest {
     @Schema(example = "01027579923")
     private String phNum;
 
-    @Length(min = 2, max = 8)
+    @Length(min = 8)
     @Schema(example = "password12@")
     private String password;
     @Schema(description = "인증 유저 디바이스 fcm token")

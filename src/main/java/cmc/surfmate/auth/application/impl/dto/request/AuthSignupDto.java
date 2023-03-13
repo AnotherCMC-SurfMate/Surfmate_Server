@@ -1,8 +1,11 @@
 package cmc.surfmate.auth.application.impl.dto.request;
 
+import cmc.surfmate.common.enums.Gender;
 import cmc.surfmate.common.enums.Provider;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 /**
  * AuthSignupDto.java
@@ -19,6 +22,8 @@ public class AuthSignupDto {
     // 공통
     private String nickname;
 
+    private String username;
+
     // 소셜 로그인 용
     private String uid;
 
@@ -29,4 +34,8 @@ public class AuthSignupDto {
 
     // 이거는 일반 로그인 용
     private String fcmToken;
+
+    private Gender gender;
+
+    private LocalDate birthday;
 }

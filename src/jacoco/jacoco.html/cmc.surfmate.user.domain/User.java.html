@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.user.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package cmc.surfmate.user.domain;
+
+import cmc.surfmate.common.enums.Provider;
+import cmc.surfmate.common.enums.RoleType;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * User.java
+ *
+ * @author jemlog
+ */
+@Entity
+@Getter
+<span class="nc" id="L20">@NoArgsConstructor(access = AccessLevel.PROTECTED)</span>
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;user_id&quot;)
+<span class="fc" id="L26">    private Long id;  // DB ID</span>
+
+    @Column(name = &quot;uid&quot;)
+<span class="fc" id="L29">    private String uid;  // 소셜 인증 아이디</span>
+
+<span class="fc" id="L31">    private String nickname;  // 닉네임</span>
+
+<span class="fc" id="L33">    private String password;  // 비밀번호</span>
+
+<span class="nc" id="L35">    private String fcmToken;  // 유저 토큰 값</span>
+
+<span class="fc" id="L37">    private String phNum;  // 핸드폰 번호</span>
+
+<span class="nc" id="L39">    private Boolean isOwner;  // 차 보유 여부</span>
+
+    // soft delete 여부
+<span class="nc" id="L42">    private String isDelete;  // soft delete 여부</span>
+
+    @Enumerated(EnumType.STRING)
+<span class="fc" id="L45">    private RoleType roleType;       // 권한 -&gt; 이거 고도화 시켜보기</span>
+
+    @Enumerated(EnumType.STRING)
+<span class="fc" id="L48">    private Provider provider;</span>
+
+<span class="nc" id="L50">    private String profileImage;  // 프로필 이미지</span>
+
+<span class="nc" id="L52">    private LocalDateTime createdAt;</span>
+
+<span class="nc" id="L54">    private LocalDateTime updatedAt;</span>
+
+    public void addFCMToken(String token)
+    {
+<span class="fc" id="L58">        this.fcmToken = token;</span>
+<span class="fc" id="L59">    }</span>
+
+<span class="pc" id="L61">    @Builder</span>
+<span class="fc" id="L62">    public User(String uid, String nickname, String phNum, String password, RoleType roleType, Provider provider,String fcmToken) {</span>
+<span class="fc" id="L63">        this.phNum = phNum;</span>
+<span class="fc" id="L64">        this.uid = uid;</span>
+<span class="fc" id="L65">        this.nickname = nickname;</span>
+<span class="fc" id="L66">        this.fcmToken = fcmToken;</span>
+<span class="fc" id="L67">        this.password = password;</span>
+<span class="fc" id="L68">        this.roleType = roleType;</span>
+<span class="fc" id="L69">        this.provider = provider;</span>
+<span class="fc" id="L70">    }</span>
+
+    public void changePassword(String password)
+    {
+<span class="fc" id="L74">        this.password = password;</span>
+<span class="fc" id="L75">    }</span>
+
+    @PrePersist
+    private void init()
+    {
+<span class="nc" id="L80">        this.createdAt = LocalDateTime.now();</span>
+<span class="nc" id="L81">        this.updatedAt = LocalDateTime.now();</span>
+<span class="nc" id="L82">        this.isDelete = &quot;N&quot;;</span>
+
+<span class="nc" id="L84">    }</span>
+
+    @PreUpdate
+    private void update()
+    {
+<span class="nc" id="L89">        this.updatedAt = LocalDateTime.now();</span>
+<span class="nc" id="L90">    }</span>
+
+    public void updateUserForSignup(String phNum, String nickname)
+    {
+<span class="nc" id="L94">        this.phNum = phNum;</span>
+<span class="nc" id="L95">        this.nickname = nickname;</span>
+<span class="nc" id="L96">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

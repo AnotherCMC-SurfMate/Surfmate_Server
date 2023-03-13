@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
  * @author jemlog
  */
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CheckDuplicatedAccountRequest {
   private String phNum;
+
 }

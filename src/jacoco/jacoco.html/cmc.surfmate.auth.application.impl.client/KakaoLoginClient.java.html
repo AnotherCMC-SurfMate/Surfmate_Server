@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>KakaoLoginClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">surfmate</a> &gt; <a href="index.source.html" class="el_package">cmc.surfmate.auth.application.impl.client</a> &gt; <span class="el_source">KakaoLoginClient.java</span></div><h1>KakaoLoginClient.java</h1><pre class="source lang-java linenums">package cmc.surfmate.auth.application.impl.client;
+
+import cmc.surfmate.auth.application.LoginClient;
+import cmc.surfmate.auth.application.impl.dto.response.KakaoUserResponse;
+import cmc.surfmate.common.enums.Provider;
+import cmc.surfmate.common.enums.RoleType;
+import cmc.surfmate.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+/**
+ * GoogleLoginService.java
+ *
+ * @author jemlog
+ */
+@Service
+<span class="fc" id="L20">@RequiredArgsConstructor</span>
+public class KakaoLoginClient implements LoginClient {
+    private final WebClient webClient;
+
+
+    @Override
+    public boolean supports(Provider provider) {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        return provider == Provider.KAKAO;</span>
+    }
+
+    @Override
+    public User getUserData(String accessToken) {
+
+<span class="nc" id="L33">        KakaoUserResponse kakaoUserResponse = webClient.get()</span>
+<span class="nc" id="L34">                .uri(&quot;https://kapi.kakao.com/v2/user/me&quot;)</span>
+<span class="nc" id="L35">                .headers(h -&gt; h.setBearerAuth(accessToken))</span>
+<span class="nc" id="L36">                .retrieve()</span>
+<span class="nc" id="L37">                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -&gt; Mono.error(new IllegalAccessException()))</span>
+<span class="nc" id="L38">                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -&gt; Mono.error(new IllegalAccessException()))</span>
+<span class="nc" id="L39">                .bodyToMono(KakaoUserResponse.class)</span>
+<span class="nc" id="L40">                .block();</span>
+
+<span class="nc" id="L42">        return User.builder()</span>
+<span class="nc" id="L43">                .uid(String.valueOf(kakaoUserResponse.getId()))</span>
+<span class="nc" id="L44">                .provider(Provider.KAKAO)</span>
+<span class="nc" id="L45">                .roleType(RoleType.USER)</span>
+<span class="nc" id="L46">                .password(&quot;NO_PASSWORD&quot;)</span>
+<span class="nc" id="L47">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

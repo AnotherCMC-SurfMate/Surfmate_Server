@@ -1,5 +1,7 @@
-package cmc.surfmate.auth.application;
+package cmc.surfmate.unit.auth.application;
 
+import cmc.surfmate.auth.application.LoginClient;
+import cmc.surfmate.auth.application.LoginClientFactory;
 import cmc.surfmate.auth.application.impl.client.AppleLoginClient;
 import cmc.surfmate.auth.application.impl.client.GoogleLoginClient;
 import cmc.surfmate.auth.application.impl.client.KakaoLoginClient;

@@ -52,14 +52,7 @@ public class OAuthService {
         // 존재하지 않는다면 회원가입으로 이동
         socialUser.addFCMToken(oAuthLoginRequest.getFcmToken());
         return new OAuthLoginResponseDto(null,true,socialUser);
-//            if (user.getPhNum() != null) {
-//                String accessToken = getToken(socialUser.getUid(), user.getRoleType());
-//                user.addFCMToken(oAuthLoginRequest.getFcmToken());
-//                return new OAuthLoginResponseDto( accessToken, false,user);
-//            } else {
-//                // 아직 회원가입을 하지 않았을때!
-//                return new OAuthLoginResponseDto(null,true,User.builder().uid(socialUser.getUid()).build());
-//            }
+
 
     }
 

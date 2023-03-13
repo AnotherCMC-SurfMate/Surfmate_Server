@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @AllArgsConstructor
 @Data
-public class GlobalExceptionResponse extends RuntimeException{
+public class GlobalExceptionResponse{
 
     private String code;
     private String message;

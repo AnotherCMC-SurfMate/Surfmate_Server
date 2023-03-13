@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * @author jemlog
  */
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CheckDuplicatedNicknameRequest {
     private String nickname;
 }
