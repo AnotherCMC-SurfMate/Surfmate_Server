@@ -7,6 +7,7 @@ import cmc.surfmate.auth.application.impl.dto.response.CheckDuplicatedAccountRes
 import cmc.surfmate.auth.common.filter.TokenProvider;
 import cmc.surfmate.auth.presentation.dto.response.AuthLoginResponse;
 import cmc.surfmate.auth.presentation.dto.response.AuthSignupResponse;
+import cmc.surfmate.common.enums.Gender;
 import cmc.surfmate.common.enums.Provider;
 import cmc.surfmate.common.enums.RoleType;
 import cmc.surfmate.common.exception.GlobalBadRequestException;
@@ -22,6 +23,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDate;
 import java.util.Optional;
 import static org.mockito.BDDMockito.*;
 
@@ -164,7 +167,7 @@ class AuthServiceTest {
   public void select_normal_signup()
   {
       // Given
-      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin", "testUid", Provider.KAKAO, "", "fcmToken");
+      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin","jemin", "testUid", Provider.KAKAO, null, "fcmToken",Gender.MALE,LocalDate.of(2000,11,22));
       lenient().when(tokenProvider.createToken(any(),any())).thenReturn("test_token_value");
 
       // When
@@ -180,7 +183,7 @@ class AuthServiceTest {
   public void select_social_signup()
   {
       // Given
-      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin", "testUid", null, "password12", "fcmToken");
+      AuthSignupDto mockDto = new AuthSignupDto("01027570146", "jemin","jemin", "testUid", Provider.NORMAL, "password12", "fcmToken",Gender.MALE,LocalDate.of(2000,11,22));
       lenient().when(tokenProvider.createToken(any(),any())).thenReturn("test_token_value");
 
       // When
